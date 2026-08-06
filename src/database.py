@@ -1,31 +1,27 @@
-from functools import wraps
-
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from src.config import settings
 
-engine = create_engine(
-    url=settings.DATABASE_URL_psycopg2(),
+async_engine = create_async_engine(
+    url=settings.DATABASE_URL_asyncpg(),
     echo=True,
     pool_size=5,
     max_overflow=10,
 )
 
 
-session_maker = sessionmaker(bind=engine, expire_on_commit=False)
+async_session_maker = async_sessionmaker(bind=async_engine, expire_on_commit=False)
 
 
 def connection(method):
-    @wraps(method)
-    def wrapper(*args, **kwargs):
-        with session_maker() as session:
+    async def wrapper(*args, **kwargs):
+        async with async_session_maker() as session:
             try:
-                return method(*args, session=session, **kwargs)
-            except Exception:
-                session.rollback()
-                raise
+                return await method(*args, session=session, **kwargs)
+            except Exception as e:
+                await session.rollback()
+                raise e
             finally:
-                session.close()  # Закрываем сессию
+                await session.close()
 
     return wrapper
