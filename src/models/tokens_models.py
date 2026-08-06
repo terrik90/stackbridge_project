@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy import ForeignKey, Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base_models import ActiveMixin, Base_model, TimestampMixin, intpk
@@ -16,6 +16,6 @@ class Tokens_model(Base_model, TimestampMixin, ActiveMixin):
     user_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("users.id"), nullable=False
     )
-    token_hash: Mapped[str] = mapped_column(String(256), nullable=False, unique=True)
+    token_hash: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
 
     user: Mapped["Users_model"] = relationship(back_populates="tokens")
