@@ -12,7 +12,7 @@ intpk = Annotated[
 ]
 
 
-class Base_model(DeclarativeBase):
+class BaseModel(DeclarativeBase):
     pass
 
 

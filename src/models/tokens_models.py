@@ -3,13 +3,13 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey, Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.models.base_models import ActiveMixin, Base_model, TimestampMixin, intpk
+from src.models.base_models import ActiveMixin, BaseModel, TimestampMixin, intpk
 
 if TYPE_CHECKING:
-    from src.models.users_models import Users_model
+    from src.models.users_models import UsersModel
 
 
-class Tokens_model(Base_model, TimestampMixin, ActiveMixin):
+class TokensModel(BaseModel, TimestampMixin, ActiveMixin):
     __tablename__ = "tokens"
 
     id: Mapped[intpk]
@@ -18,4 +18,4 @@ class Tokens_model(Base_model, TimestampMixin, ActiveMixin):
     )
     token_hash: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
 
-    user: Mapped["Users_model"] = relationship(back_populates="tokens")
+    user: Mapped["UsersModel"] = relationship(back_populates="tokens")
